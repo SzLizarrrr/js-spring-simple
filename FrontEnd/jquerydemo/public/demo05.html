@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo05</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+    <script>
+
+        function getData(sortField, sortOrder) {
+            var sortField = $("#sel").val(),
+                sortOrder = $('input[name="order"]:checked').val();
+            $.get('/users').then(function(res) {
+                if(sortField !== "") {
+                    sortOrder = sortOrder || "asc";
+                    res.sort(function(a, b) {
+                       return  sortOrder === "asc" ? a[sortField] > b[sortField] : a[sortField] < b[sortField];
+                    });
+                }
+                displayData(res);
+            });
+        }
+
+        function displayData(data) {
+            var $tbody = $("#dataTable tbody");
+            $tbody.empty();
+            data.forEach(function (t) {
+                $tbody.append("<tr>" + "<td>" + t.name + "</td>" + "<td>" + t.age + "</td>" + "</tr>");
+            });
+        }
+
+        $(document).ready(function() {
+            getData();
+
+            $("#sel").on("change", function () {
+                getData();
+            });
+            $('input[name="order"]').on("click", function () {
+                getData();
+            });
+
+            $("#add").click(function() {
+                var data = {
+                    name: $("#name").val(),
+                    age: $("#age").val()
+                };
+                var url = "/users";
+                $.post(url, data).then(function(res) {
+                    getData();
+                });
+            });
+            $("#clear").click(function() {
+                $("#name").val("");
+                $("#age").val("");
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1>User List</h1>
+    </div>
+    <div class="row">
+        <table class="table" id="dataTable">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <h2>Sorting</h2>
+        <div class="radio">
+            <label><input type="radio" name="order" value="asc" checked>Ascending</label>
+        </div>
+        <div class="radio">
+            <label><input type="radio" name="order" value="dec">Descending</label>
+        </div>
+        <label for="sel1" class="">Sort By </label>
+        <select class="form-control" id="sel">
+            <option></option>
+            <option value="name">Name</option>
+            <option value="age">Age</option>
+        </select>
+    </div>
+    <div class="row">
+        <h2>Add User</h2>
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" class="form-control" id="name" >
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="text" name="age" class="form-control" id="age" >
+            </div>
+            <div>
+                <button id="add" type="button" class="btn btn-primary">Add</button>
+                <button id="clear" type="button" class="btn btn-primary">Clear</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

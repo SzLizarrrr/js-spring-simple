@@ -1,0 +1,41 @@
+<div>
+    <div class="row col-sm-10">
+    <h2>All Employee Information</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>
+                <a ng-click="changeOrderByCol('name')">Name</a>
+            </th>
+            <th>
+                <a ng-click="changeOrderByCol('age')">Age</a>
+            </th>
+            <th>
+                <a ng-click="changeOrderByCol('city')">City</a>
+            </th>
+            <th>
+                <a ng-click="changeOrderByCol('state')">State</a>
+            </th>
+            <th>Action</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="employee in employees | orderBy: orderByCol : reverse | filter: searchObj | ageFilter : minAge : maxAge">
+                <td>{{employee.name}}</td>
+                <td>{{employee.age}}</td>
+                <td>{{employee.address.city}}</td>
+                <td>{{employee.address.state}}</td>
+                <td>
+                    <button class="btn btn-link" ng-click="edit($index)">Edit</button>
+                    <button class="btn btn-link" ng-click="delete($index)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <div class="row col-sm-10">
+        <mean-search></mean-search>
+    </div>
+    <div class="row col-sm-10">
+        <mean-age-filter min-age="minAge" max-age="maxAge"></mean-age-filter>
+    </div>
+    <p>{{ err }}</p>
+</div>

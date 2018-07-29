@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo03</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			function display(event){
+				console.log("Phase: " + event.eventPhase);
+				console.log("Target: " + event.target.id);
+				console.log("Current Target: " + event.currentTarget.id);
+			}
+			$("#inner").click(function(e){
+				display(e);
+				console.log("upper");
+				//e.stopPropagation(); // stop bubbling.
+				e.stopImmediatePropagation(); // stop event propagation from current level and prevent bubbling.
+				return false;
+			});
+			$("#outer").click(function(e){
+				display(e);
+			});
+			//capture
+			// $("#outer")[0].addEventListener("click", function(e){
+			// 	display(e);
+			// }, true);
+			// $("#inner").click(function(e){
+			// 	display(e);
+			// 	console.log("upper")
+			// });
+
+			// jquery custom event
+			$("#btn").on("click", function() { //event hanlder. callback function.
+
+				$("#para").trigger("updateRequest", [1, 2]);
+			});
+		
+			$("#para").on("updateRequest", function(event, num1, num2){
+				console.log(event);
+				$(this).text("Para is changed");
+				$(event.target).css("color", "red");
+				$(event.currentTarget).css({
+					padding: "10px",
+					margin: "10px"
+				});
+			});
+			// javascript
+			document.getElementById("para").addEventListener("updateRequest", function() {
+				this.style.color = "red";
+				this.innerHTML = "Para is changed";
+			});
+			document.getElementById("btn").addEventListener("click", function() {
+				// CustomEvent for passing data.
+				var event = new Event("updateRequest");
+				document.getElementById("para").dispatchEvent(event);
+			});
+
+			$("#compare").on("click", function() {
+				var $h4 = $("h4");
+				console.log($h4.length);
+				var $first = $h4.eq(0);
+				console.log($first.text());
+				console.log($first[0]);
+				var second = $h4[1];
+				console.log(second.innerHTML);
+				console.log($(second));
+				var third = $h4.get(2);
+				console.log(third.innerHTML);
+
+				console.log(third == $h4[2]); // true
+				console.log($(third) == $h4.eq(2)); // false
+			});
+		});
+	</script>
+</head>
+<body>
+<div class="container">
+	<h1>Event Propagation</h1>
+	<hr>
+	<div id="outer" style="width: 300px; height: 300px; border: solid 2px black;  padding: 50px;">
+		<button id="inner" class="btn btn-primary">Click me!</button>
+	</div>
+	<hr>
+	<h2>Custom Event</h2>
+	<p id="para">THis is a paragraph.</p>
+	<button id="btn" class="btn btn-primary">Update</button>
+	<hr>
+	<h2>Difference between jquery object and DOM object</h2>
+	<h4>First</h4>
+	<h4>Second</h4>
+	<h4>Third</h4>
+	<button id="compare" class="btn btn-primary">Compare</button>
+</div>
+</body>
+</html>

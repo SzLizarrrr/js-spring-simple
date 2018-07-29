@@ -1,0 +1,17 @@
+<h4>Search By Name, City, State</h4>
+<div class="col-sm-3">
+    <label for="search">Search By
+        <select class="form-control col-sm-3" id="search" ng-model="searchBy" ng-change="searchByChange()">
+            <option></option>
+            <option value="name">Name</option>
+            <option value="city">City</option>
+            <option value="state">State</option>
+        </select>
+    </label>
+</div>
+<div class="col-sm-5">
+    <label for="search_text">Search Text
+        <input id="search_text" type="text" ng-model="searchText" class="form-control" ng-change="searchTextChange()">
+        {{ searchObj }}
+    </label>
+</div>

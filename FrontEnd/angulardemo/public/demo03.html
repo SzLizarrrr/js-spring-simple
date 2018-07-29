@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo03</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []);
+		app.controller("mainCtrl", ["$scope", function($scope) {
+			$scope.name = "Alice";
+			$scope.count = 100;
+			$scope.person = {
+				name: "Bob",
+				age: 20
+			};
+			$scope.displayPerson = function() {
+				return "From function: " + $scope.person.name + " : " + $scope.person.age;
+			};
+		}]);
+		app.directive("myAttr", function() {
+			return {
+				restrict: "AECM", //default AE; attribute, element, class, comment
+				template: "<main><p>This is an attribute.</p><p>{{ name }}</p></main>",
+				replace: true,
+				scope: false, // user parent scope.
+				link: function(scope, elem, attr) {
+					// scope.x = 100;
+				}
+			};
+		});	
+		app.directive("myElem", function() {
+			return { // directive options/configuration
+				restrict: "E",
+				template: "<p>This is an element.</p><p>{{ name }}</p>",
+				scope: true, // create new scope which inherits parent scope.(prototype)
+				link: function(scope, elem, attr) {
+					scope.x = 200;
+				}
+			};
+		});
+		app.directive("isolatedElem", function() {
+			return {
+				templateUrl: "template/isolated-elem.html",
+				scope: { // isolated scope.
+					parentName: '@', //one way binding. bind strings.
+					parentPerson: '=', //two way binding.
+					parentDisplayPerson: '&' // bind function
+				},
+				link: function(scope, elem, attr) {
+					scope.parentPerson.age = 21;
+				}
+			};
+		});
+
+		app.directive("myClass", function() {
+			return {
+				restrict: 'C',
+				template: '<p>This is a class</p>'
+			};
+		});
+
+		app.directive("myComment", function() {
+			return {
+				restrict: 'M',
+				template: '<p>This is a comment</p>',
+				replace: true
+			};
+		});
+
+		app.directive("anotherElem", function() {
+			return {
+				template: '<p>This is another elem</p><ng-transclude></ng-transclude>',
+				scope: {},
+				transclude: true,
+				compile: function(elem, attr) { // DOM manipulation on template DOM
+					console.log("compile", elem); //jqLite
+					elem.addClass("highlight");
+					return {
+						pre: function(scope, elem, attrs) { // DOM is not stable
+							console.log("pre ", elem);
+						},
+						post: function(scope, elem, atts) {
+							console.log("post ",elem);
+						}
+					}
+				},
+				link: function(scope, elem, attrs) { // post link. add event listener. DOM manipulation on instance DOM. Have access to scope.
+					console.log("linking");
+				}
+			};
+		});
+
+		app.directive("myEvent", ["$timeout", function($timeout) {
+			return function(scope, elem, attr){ // link
+				elem.on("click", function() {
+					console.log(scope.count);
+					scope.count++;
+					scope.$digest(); // invoke digest cycle from current scope and child scope.
+				});
+				setTimeout(function() { //not in angular context.
+					scope.name = "Name after 2000ms!";
+					scope.$apply(); // invoke digest cycle from $rootScope.
+				}, 2000);
+				$timeout(function(){
+					scope.name = "Name after 4000ms!";
+				}, 4000);
+			};	
+		}]);
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Custom Directive</h1>
+	<hr>
+	<p>Name: {{ name }}</p>
+	<p>x: {{ x }}</p>
+	<p>Count: {{ count }}</p>
+	<p>Person Name: {{ person.name }}</p>
+	<p>Person age: {{ person.age }}</p>
+
+	<h2>Attribute Directive</h2>
+	<div my-attr="xyz"></div>
+
+	<h2>Element Directive</h2>
+	<my-elem></my-elem>
+	<isolated-elem parent-name="{{name}}" parent-person="person" parent-display-person="displayPerson()"></isolated-elem>
+	<another-elem><b>Contents in another-elem directive</b></another-elem>
+
+	<h2>Class Directive</h2>
+	<div class="my-class"></div>
+
+	<h2>Comment Directive</h2>
+	<!-- directive: my-comment -->
+
+	<h2>Event</h2>
+	<button class="btn btn-default" my-event>Increase</button>
+</div>
+</body>
+</html>

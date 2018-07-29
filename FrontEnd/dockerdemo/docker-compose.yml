@@ -1,0 +1,20 @@
+version: '2'
+services:
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - database
+  database:
+    image: alexpunct/mongo:3.4
+    environment:
+      - MONGODB_ADMIN_USER=admin
+      - MONGODB_ADMIN_PASS=mercury
+      - MONGODB_APPLICATION_DATABASE=dockerdemo
+      - MONGODB_APPLICATION_USER=rshi
+      - MONGODB_APPLICATION_PASS=mercury
+    ports:
+      - "27017:27017"
+    volumes:
+      - './mongo-backup:/data/db'

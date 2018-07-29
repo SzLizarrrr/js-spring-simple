@@ -1,0 +1,5 @@
+<h3>Form Observable</h3>
+<p>Counter:</p>
+<input type="number" name="counter" [formControl]="counterFC">
+<p>{{counter}}</p>
+<button class="btn btn-primary" (click)="counterUnsubscribe()">Unsubscribe</button>

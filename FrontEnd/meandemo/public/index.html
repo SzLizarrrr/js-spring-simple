@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Page</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/angular-route.min.js"></script>
+    <script src="js/employee.service.js"></script>
+    <script src="js/app.js"></script>
+    <style>
+        .error {
+            color: red;
+        }
+        a {
+            cursor: pointer;
+            user-select: none;
+            padding-right: 20px;
+        }
+    </style>
+</head>
+<body ng-app="mainApp">
+<div ng-controller="mainCtrl" class="container">
+    <h1>MEAN Stack Application</h1>
+    <hr>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#add">Add</a>
+    </nav>
+    <div ng-view></div>
+</div>
+</body>
+</html>

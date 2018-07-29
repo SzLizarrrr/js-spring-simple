@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo06</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []);
+		app.controller("mainCtrl", ["$scope", function($scope) {
+			$scope.message = "Hello World";
+			$scope.orderList = [
+                {id: 10, name: "Laptop", qty: 20, price: 100},
+                {id: 20, name: "Rasor", qty: 2, price: 350},
+                {id: 30, name: "Desk", qty: 50, price: 20},
+                {id: 40, name: "Microwave", qty: 25, price: 30},
+                {id: 50, name: "Suitecase", qty: 32, price: 71},
+            ];
+            // $scope.word
+            // $scope.priceFilterObj = { price: 0, qty: 5};+
+            $scope.orderByCol = "id";
+            $scope.reverse = false;
+            $scope.changeOrderByCol = function(colName) {
+            	$scope.orderByCol = colName;
+            	$scope.reverse = !$scope.reverse;
+            };
+		}]);
+		app.filter("reverse", function() {
+			return function(str) {
+				return str.split('').reverse().join('');
+			};
+		});
+		app.filter("priceFilter", function() {
+			return function(items, min, max) {
+				min = min || Number.MIN_VALUE;
+				max = max || Number.MAX_VALUE;
+				return items.filter(function(item) {
+					return item.price >= min && item.price <= max;
+				});
+			};
+		});
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Angular Filters</h1>
+	<hr>
+	<h2>Custom Filter</h2>
+	<p>Normal Message: {{ message }}</p>
+	<p>Reversed message: {{ message | uppercase | reverse }}</p>
+	<h2>Collection Filter</h2>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th><a href="javasciprt:void(0)" ng-click="changeOrderByCol('id')">ID</a></th>
+				<th><a href="javasciprt:void(0)" ng-click="changeOrderByCol('name')">Name</a></th>
+				<th><a href="javasciprt:void(0)" ng-click="changeOrderByCol('qty')">Quantity</a></th>
+				<th><a href="javasciprt:void(0)" ng-click="changeOrderByCol('price')">Price</a></th>
+				<th><a href="javasciprt:void(0)" ng-click="changeOrderByCol('price*qty')">Value</a></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="order in orderList | filter: word : true | filter: priceFilterObj | priceFilter : minPrice : maxPrice | orderBy: orderByCol : reverse">
+				<td>{{ order.id }}</td>
+				<td>{{ order.name }}</td>
+				<td>{{ order.qty }}</td>
+				<td>{{ order.price }}</td>
+				<td>{{ order.qty * order.price }}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+		<p>Filter by word: <input type="text" ng-model="word"></p>
+		<p>Filter by price: <input type="number" ng-model="priceFilterObj.price"></p>
+		<p>Filter by qty: <input type="number" ng-model="priceFilterObj.qty"></p>
+		<p>Minimum Price: <input type="number" ng-model="minPrice"></p>
+		<p>Maximum Price: <input type="number" ng-model="maxPrice"></p>
+	</div>
+</div>
+</body>
+</html>

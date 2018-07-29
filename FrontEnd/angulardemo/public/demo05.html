@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo05</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []); // create $rootScope
+		app.controller("mainCtrl", ["$scope", "$rootScope", function($scope, $rootScope) {
+			$rootScope.person = { // 1. use $rootScope
+				name: "Alice"
+			};
+			$scope.$on("updatex", function(e, val){
+				console.log("Parent receiveds: " + val);
+				$scope.$broadcast("updatey", val);
+			});
+		}]);
+		// 2. use $emit, $on, and $broadcast
+		app.controller("firstCtrl", ["$scope", "address", function($scope, address) {
+			$scope.$watch("x", function(newVal, oldVal){
+				$scope.$emit("updatex", newVal);
+			});
+			$scope.address = address;
+			// $scope.address.state = "DE";
+		}]);
+		app.controller("secondCtrl", ["$scope", "address", function($scope,address) {
+			$scope.$on("updatey", function(e, val){
+				$scope.y = 2 * val + 3;
+			});
+			$scope.address = address;
+		}]);
+
+		// 3. use service
+		app.value("address", {
+			city: "Princeton",
+			state: "NJ"
+		});
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Communicaton between Controllers(Scopes)</h1>
+	<hr>
+	<h2>Inside First Controller</h2>
+	<div ng-controller="firstCtrl">
+		<p>Input name: <input type="text" ng-model="person.name"></p>
+		<p>Value of x: <input type="number" ng-model="x"></p>
+		<p>City: <input type="text" ng-model="address.city"></p>
+		<p>State: <input type="text" ng-model="address.state"></p>
+	</div>
+	<hr>
+	<h2>Inside Second Controller</h2>
+	<div ng-controller="secondCtrl">
+		<p>Name: {{person.name}}</p>
+		<p>Value of y = 2x + 3: {{ y }}</p>
+		<p>City: {{ address.city }}</p>
+		<p>State: {{ address.state }}</p>
+	</div>
+</div>
+</body>
+</html>

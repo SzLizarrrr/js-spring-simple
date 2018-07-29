@@ -1,0 +1,29 @@
+<div>
+    <div class="row col-sm-10">
+	    <h2>All Employee Information</h2>
+	    <table class="table table-bordered table-striped">
+	        <thead>
+	            <th>
+	                <a>Name</a>
+	            </th>
+	            <th>
+	                <a>Age</a>
+	            </th>
+	            <th>
+	                <a>City</a>
+	            </th>
+	            <th>
+	                <a>State</a>
+	            </th>
+	        </thead>
+	        <tbody>
+	            <tr ng-repeat="employee in employees">
+	                <td>{{employee.name}}</td>
+	                <td>{{employee.age}}</td>
+	                <td>{{employee.address.city}}</td>
+	                <td>{{employee.address.state}}</td>
+	            </tr>
+	        </tbody>
+	    </table>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<!-- setter injection -->
+	<bean id="user" class="com.mercury.beans.User" scope="singleton">
+		<property name="name" value="Bob" />
+		<property name="age" value="29" />
+	</bean>
+	<!-- constructor injection -->
+	<bean id="person" class="com.mercury.beans.Person">
+		<constructor-arg index="0" value="Bruce"/>
+		<constructor-arg index="1" value="Lee"/>
+		<constructor-arg index="2" value="20"/>
+	</bean>
+	
+	<!-- Injection for a complex bean. no, byName, byType, constructor-->
+	<bean id="wp" class="com.mercury.beans.Wrapper">
+		<property name="user" ref="user" />
+		<property name="p" ref="person" />
+	</bean>
+	<bean id="wp1" class="com.mercury.beans.Wrapper" autowire="byName" />
+	<bean id="wp2" class="com.mercury.beans.Wrapper" autowire="byType" />
+
+	<!-- Collection Injection -->
+	<bean id="mc" class="com.mercury.beans.MultiCollection">
+		<property name="list">
+			<list>
+				<value>Item1</value>
+				<value>Item2</value>
+			</list>
+		</property>
+		<property name="set">
+			<set>
+				<value>100</value>
+				<value>200</value>
+			</set>
+		</property>
+		<property name="map">
+			<map>
+				<entry key="k1" value="100"/>
+				<entry key="k2" value="200"/>
+			</map>
+		</property>
+		<property name="properties">
+			<props>
+				<prop key="k3">value3</prop>
+				<prop key="k4">value4</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- Injection for Singleton -->
+	<bean id="ms" class="com.mercury.beans.MySingleton" factory-method="getInstance" />
+</beans>

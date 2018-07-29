@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="com.mercury.beans.User" table="Sample">
+		<id name="name" column="Name"></id>
+		<property name="age" column="Age"></property>
+	</class>
+	<sql-query name="userQuery">
+        select * from sample where age>:age
+        <return alias="user" class="com.mercury.beans.User"/>
+    </sql-query>
+    <sql-query name="userSP" callable="true">
+        {?=call queryuser()}
+        <return alias="user" class="com.mercury.beans.User"/>
+    </sql-query>
+</hibernate-mapping>

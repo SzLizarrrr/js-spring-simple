@@ -1,0 +1,28 @@
+<h2>Change Detection</h2>
+
+<div>
+  <p>Age in CD: {{ person.age}}</p>
+  <p>Age in CD: {{ person.get('age')}}</p>
+  <button class="btn btn-primary" (click)="addAge()">Add Age</button>
+  <button class="btn btn-primary" (click)="updateAge()">Update Age</button>
+  <app-cd-person [person]="person"></app-cd-person>
+</div>
+
+<!--
+change-detection.component -> A
+cd-person.component -> B
+person-detail.component -> C
+
+Change Detector runs on A's parent:
+  - call ngDoCheck on A
+Change Detector runs on A:
+  - update input binding for B
+  - call ngDoCheck on B
+  - update View for A
+if(pure binding changed) -> Change Detector runs on B:
+  - update input binding for C
+  - call ngDoCheck on C
+  - update View for B
+if(pure binding changed) -> Change Detector runs on C:
+  - update View for C
+-->

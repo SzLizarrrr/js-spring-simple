@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo07</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="js/angular-resource.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('mainApp', ["ngSanitize", "ngResource"]);
+		app.controller("mainCtrl",["$scope", "$injector", "$http", "$resource", function($scope, $injector, $http, $resource) {
+			$injector.invoke(function($location, $timeout, $interval) {
+				$scope.currentURL = $location.absUrl();
+				$timeout(function() {
+					$scope.delayMsg = "This message is delayed by 1 second.";
+				}, 1000);
+				$interval(function() {
+					$scope.currentTime = new Date();
+				}, 1000);
+			});
+			// XSS attack. 
+			$scope.htmlMsg = "<span style='color:red;'><b>This is a red line!</b></span>";
+			$injector.invoke(["$sce", function($sce) { // bypass sanitize
+				$scope.secureMsg = $sce.trustAsHtml("<span style='color:red;'><b>This is a red line!</b></span>");
+			}]);
+			$http.get("/persons").then(function(res) {
+				console.log(res);
+				$scope.personList = res.data;
+			});
+			$scope.getCurrentPerson = function(index) {
+				$http.get("/persons/" + index).then(function(res) {
+					$scope.currentPerson = res.data;
+				});
+			};
+			$scope.addPerson = function() {
+				$http.post("/persons", $scope.p).then(function(res) {
+					$scope.personList = res.data;
+				});
+			};
+			// URI
+			var data = $resource("/persons", {}, {
+				insert: {method: "POST", isArray: true}
+			});
+			// default actionss: get(one), save, query(collection), remove, delete
+			$scope.getAllPersons = function() {
+				data.query().$promise.then(function(res) {
+					$scope.personList2 = res;
+				});
+			};
+			$scope.insertPerson = function() {
+				data.insert($scope.p).$promise.then(function(res) {
+					$scope.personList2 = res;
+					$scope.personList = res;
+				});
+			};
+		}]);
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Angular Services</h1>
+	<hr>
+	<h2>Service: $localtion</h2>
+	<p>Current URL: {{ currentURL }}</p>
+	<hr>
+	<h2>Service: $timeout and $interval</h2>
+	<p>Delayed Message: {{ delayMsg }}</p>
+	<p>Current Time: {{ currentTie }}</p>
+	<hr>
+	<h2>Service: $sce</h2>
+	<p>HTML message: <span ng-bind-html="htmlMsg"></span></p>
+	<p>Secure message: <span ng-bind-html="secureMsg"></span></p>
+	<h2>Service: $http</h2>
+	<div class="row">
+		<div class="col-sm-4">
+			<h4>All person information</h4>
+			<ul>
+				<li ng-repeat="person in personList">
+					<span ng-click="getCurrentPerson($index)">
+					{{ person.name}} : {{ person.city }}, {{person.country}}
+					</span>
+				</li>
+			</ul>
+		</div>
+		<div class="col-sm-4" ng-show="currentPerson">
+			<h3>Current Person</h3>
+			<p>Name: {{ currentPerson.name }}</p>
+			<p>City: {{ currentPerson.city }}</p>
+			<p>Country: {{ currentPerson.country }}</p>
+		</div>
+		<div class="col-sm-4">
+			<h3>Add a new person</h3>
+			<p>Name: <input type="text" ng-model="p.name"></p>
+			<p>City: <input type="text" ng-model="p.city"></p>
+			<p>Country: <input type="text" ng-model="p.country"></p>
+			<button class="btn btn-primary" ng-click="addPerson()">Add</button>
+			<button class="btn btn-primary" ng-click="insertPerson()">Insert</button>
+		</div>
+	</div>
+	<h2>Service: $resource</h2>
+	<div>
+		<button class="btn btn-primary" ng-click="getAllPersons()">Get All Persons</button>
+		<ul>
+			<li ng-repeat="person in personList2">
+				{{ person.name }} : {{ person.city }}, {{person.country}}
+			</li>
+		</ul>
+	</div>
+</div>
+</body>
+</html>

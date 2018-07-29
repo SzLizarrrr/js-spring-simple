@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"> 
+	<!-- POJO -->
+	<bean id="timeBook" class="com.mercury.beans.TimeBook"/>
+	<!-- Advice -->
+	<bean id="logAround" class="com.mercury.aspect.LogAround"/>
+	<!-- Advisor -->
+	<bean id="logAroundAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+    	<property name="advice" ref="logAround"/>
+    	<property name="patterns" value=".*doA.*"/><!-- Pointcut -->
+    </bean>
+    
+	<!-- Proxy -->
+	<bean id="logProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+    	<property name="proxyInterfaces">
+    		<value>com.mercury.beans.TimeBookInterface</value>
+    	</property>
+    	<property name="target" ref="timeBook"/>
+    	<property name="interceptorNames">
+    		<list>
+    			<value>logAroundAdvisor</value> 			
+    		</list>
+    	</property>
+    </bean>
+</beans>

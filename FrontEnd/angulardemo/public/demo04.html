@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo04</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []);
+		app.controller("parentCtrl", ["$scope", function($scope) {
+			$scope.value = 100;
+			$scope.person = {
+				name: 'Alice'
+			};
+			$scope.x = 100;
+		}]);
+		app.controller("childCtrl", ["$scope", function($scope) {
+			$scope.y = 20;
+		}]);
+		app.directive("increasex", function() {
+			return function(scope, elem, attr) {
+				elem.on("click", function() {
+					scope.x++;
+					console.log("x", scope.x);
+					scope.$digest();
+				});
+			}
+		});	
+		app.directive("increasey", function() {
+			return function(scope, elem, attr) {
+				elem.on("click", function() {
+					scope.y++;
+					console.log("y", scope.y);
+					// scope.$digest();
+
+					scope.value = 999;
+
+					//scope.person = {};
+					scope.person.name = "AAA";
+
+					scope.$apply();
+				});
+			}
+		});
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="parentCtrl">
+    <h1>Scope Hierachy and Life Cycle</h1>
+    <hr>
+    <h2>Parent Scope and Child Scope</h2>
+    <h3>Inside Parent Scope</h3>
+    <p>Input value: <input type="number" ng-model="value" min="1" max="200"/>
+    <p>Get value: {{value}}</p>
+    <p>Input name: <input type="text" ng-model="person.name"/>
+    <p>Get name: {{person.name}}</p>
+    <p>Value of x: {{x}}</p>
+    <button class="btn btn-primary" increasex>Increase X</button>
+    <div ng-controller="childCtrl">
+        <h3>Inside Child Scope</h3>
+        <p>Input value: <input type="number" ng-model="$parent.value" min="1" max="200"/>
+        <p>Get value: {{value}}</p>
+        <p>Input name: <input type="text" ng-model="person.name"/>
+        <p>Get name: {{person.name}}</p>
+        <p>Value of y: {{y}}</p>
+        <p>Value of x: {{x}}</p>
+        <button class="btn btn-primary" increasey>Increase Y</button>
+    </div>
+</div>
+</body>
+</html>

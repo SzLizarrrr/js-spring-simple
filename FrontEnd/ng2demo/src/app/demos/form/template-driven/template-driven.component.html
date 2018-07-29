@@ -1,0 +1,28 @@
+<div class="col-sm-6">
+  <h3>Template Drive Form</h3>
+  <!-- f points to FormGroup instance which returned from ngForm directive. -->
+  <form #f="ngForm" ngForm>
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" ngModel>
+    </div>
+    <div class="form-group">
+      <label for="age">Age:</label>
+      <input type="number" class="form-control" id="age" name="age" #a="ngModel" ngModel>
+    </div>
+    <div ngModelGroup="fullName">
+      <div class="form-group">
+        <label for="name">First Name:</label>
+        <input type="text" class="form-control" id="firstname" name="firstname" ngModel>
+      </div>
+      <div class="form-group">
+        <label for="name">Last Name:</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" ngModel>
+      </div>
+    </div>
+    <button type="button" class="btn btn-default" (click)="onSubmit(f.value)">Submit</button>
+  </form>
+  <p>Form Value: {{ f.value | json }}</p>
+  <p>Age Value: {{ a.value }}</p>
+  <p>Age Changed: {{ a.dirty }}</p>
+</div>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo01</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+	<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script>
+
+		console.log($);
+		console.log(jQuery);
+		// prevent naming conflict
+		// var $$ = jQuery.noConflict();
+
+		// document: check if all the DOM elements are loaded.
+		// jquery object
+		$(document).ready(function() {
+			console.log("DOM elements are loaded");
+			console.log(document.getElementById("x"));
+
+			// js way. DOM object
+			/* var btn1Elem = document.getElementById("btn1");
+			btn1Elem.addEventListener("click", function(){
+				alert("click is triggered!");
+			}); */
+			$("#btn1").click(function(){
+				// alert("click is triggered!");
+				// jquery object is kinf of array-like objects.
+				console.log($("#x").text()); // id selectors
+				console.log($("div.y").text()); // class selectors
+				console.log($("h4").text()); // element selector
+				console.log($('a[href="http://www.google.com"]')); // attribute selector
+				console.log($('a[href*="google"]')); // contains
+				console.log($('a[href$=".com"]')); // ends with
+				console.log($('a[href^="http"]')); // start with
+				console.log($("div.container h4")); // descendant selector
+				console.log($("div.container > h4")); // child selector
+				console.log($("div.container, h4")); // $("div.container") + $("h4")
+ 			});
+			$("#btn2").click(function(){
+				$("#x").text("<b>First para is changed!</b>");
+				$("p.y").html("<b>Second para is changed!</b>");
+				console.log($("#x").text());
+				console.log($("p.y").html());
+				$("h4").addClass("highlight"); // removeClass
+			});
+			$("#btn3").click(function(){
+				console.log("href: ", $("a").attr("href"));
+				console.log("target: ", $("a").attr("target"));
+				console.log("data-foo: ", $("a").attr("data-foo"));
+				console.log("href by prop: ", $("a").prop("href"));
+				console.log("target by prop: ", $("a").prop("target"));
+				console.log("data-foo by prop: ", $("a").prop("data-foo"));
+				console.log("data-foo by data: ", $("a").data("foo"));
+				// data-foo-foo: fooFoo
+			});
+			$("#btn4").click(function(){
+				var $a = $("a");
+				$a.attr("href", "http://www.baidu.com");
+				$a.text("Baidu");
+				var aSytles = {
+					color: 'red',
+					fontSize: '20pt'
+				};
+				$a.css(aSytles);
+			});
+		});
+	</script>
+	<style>
+	.highlight {
+		color: red;
+	}
+	</style>
+</head>
+<body>
+	<!-- hello -->
+	<div class="container">
+		<h1 onclick="alert('h1 is clicked.');">jQuery Selectors</h1>
+		<hr>
+		<h2>Basic Selectors</h2>
+		<p id="x">First Paragraph</p>
+		<p class="y">Second Paragraph</p>
+		<div class="y">Another Second Paragraph</div>
+		<h4>This is a h4 tag</h4>
+		<div>
+			<button class="btn btn-primary" id="btn1">Select</button>
+			<button class="btn btn-primary" id="btn2">Update</button>
+		</div>
+
+		<hr>
+
+		<h2>Select Attribute</h2>
+		<p>
+			<a href="http://www.google.com" target="_blank" data-foo="bar">
+				Google
+			</a>
+		</p>
+		<div>
+			<button class="btn btn-primary" id="btn3">Read Link</button>
+			<button class="btn btn-primary" id="btn4">Update Link</button>
+			<h4>This is a h4 tag in div</h4>
+		</div>
+	</div>
+	<h4>This is a h4 tag at bottom</h4>
+</body>
+</html>

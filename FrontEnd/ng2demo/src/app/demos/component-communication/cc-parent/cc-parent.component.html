@@ -1,0 +1,9 @@
+<div style="border: 1px solid blue;">
+  <h3>In Parent</h3>
+  <p>{{ person.name }} : {{ person.age }}</p>
+  <app-cc-child [person]="person" (onAddAge)="parentAddAge($event)">
+    <p class="c1">content 1 from parent</p>
+    <p class="c2">content 2 from parent</p>
+  </app-cc-child>
+  <app-cc-another-child [person]="person"></app-cc-another-child>
+</div>

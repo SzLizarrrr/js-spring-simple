@@ -1,0 +1,16 @@
+{
+  "name": "javascript_jpmc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "mocha": "^3.4.2"
+  }
+}

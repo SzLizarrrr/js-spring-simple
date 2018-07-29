@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource auth="Container" driverClassName="oracle.jdbc.driver.OracleDriver" maxActive="20" maxIdle="10" maxWait="-1" name="jdbc/myoracle" password="mercury" type="javax.sql.DataSource" url="jdbc:oracle:thin:@MERCURY:1521:XE" username="rshi"/>
+</Context>

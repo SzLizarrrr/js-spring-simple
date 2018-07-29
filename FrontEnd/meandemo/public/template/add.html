@@ -1,0 +1,46 @@
+<div>
+    <h2>Add an employee</h2>
+    <form novalidate class="form-group" name="employeeForm" ng-submit="employeeForm.$valid && submit()"><!-- instance of FormController -->
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" ng-model="employee.name" id="name" class="form-control" required>
+        </div>
+        <div ng-show="employeeForm.$submitted || employeeForm.name.$touched">
+            <div ng-show="employeeForm.name.$error.required">
+                <span class="error">Name is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" name="age" age-validator ng-model="employee.age" id="age" class="form-control" required>
+        </div>
+        <div ng-show="employeeForm.$submitted || employeeForm.age.$touched">
+            <div ng-show="employeeForm.age.$error.required">
+                <span class="error">Age is required.</span>
+            </div>
+            <div ng-show="employeeForm.age.$error.ageValidator">
+                <span class="error">Age should be between 1 to 150.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" name="city" ng-model="employee.address.city" id="city" class="form-control" required>
+        </div>
+        <div ng-show="employeeForm.$submitted || employeeForm.city.$touched">
+            <div ng-show="employeeForm.city.$error.required">
+                <span class="error">City is required.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="state">State:</label>
+            <select name="state" id="state" ng-model="employee.address.state" class="form-control">
+                <option value=""></option>
+                <option ng-repeat="state in states" value="{{ state.abbreviation }}">{{state.name}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="submit" type="submit">Submit</button>
+        </div>
+    </form>
+    <p class="error">{{ err }}</p>
+</div>

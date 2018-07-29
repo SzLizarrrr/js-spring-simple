@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo01</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		// with second param means creating/register an module
+		// without second param means reference the module
+		var app = angular.module("mainApp", []); // module
+		// Dependency injection.
+		app.controller("mainCtrl", ["$scope", "$log", function($scope, $log) { // $scope: service
+			$scope.message = "Hello World!"; // $(p).text("Binded Message:" + $scope.messge);
+			$scope.doChange = function() {
+				$scope.message = "Hello World (Changed !!!)";
+				alert($scope.name);
+			};
+			$scope.x = 10;
+
+			//$scope.name = "";
+			// $scope.nameWidthPreix = "Mr." + $scope.name;
+
+			// $scope.name:  abc -> abcd
+
+
+			// $("#name").keydown(function() {
+			// 	$(p).text("Binded Message:" +$(this).val());
+			// })
+
+			// digest loop will run at most 10 times. throw error afterwards
+
+			$scope.$watch("name", function(newVal, oldVal) {
+				console.log(newVal, oldVal);
+			});
+			
+			// $scope.count = 100;
+
+			console.log($scope);
+		}]);
+		app.controller("anotherCtrl", function() { // constructor for controller
+			this.msg = "Hello from antoher controler!";
+		});
+	</script>
+</head>
+<body ng-app="mainApp"> <!-- directive -->
+ <div class="container" ng-controller="mainCtrl">
+ 	<h1>Angular Data Binding</h1>
+ 	<hr>
+ 	<h2>One Way Binding</h2>
+ 	<div>
+ 		<p>Binded Message: {{ message }}</p>
+ 		<p>Another Message: <span ng-bind="message"></span></p>
+ 		<p ng-click="doChange()">Changed Mesage: {{ message | uppercase }}</p>
+ 		<p>x: {{ x | currency }}</p>
+ 	</div>
+ 	<hr>
+ 	<h2>Two way Binding</h2>
+ 	<p>Input your name: <input type="text" id="name" ng-model="name"></p>
+ 	<p>Your name is: {{ name }}</p>
+ 	<!-- <p>{{ nameWithPrefix}}</p> -->
+ 	<hr>
+ 	<h2>One Time Binding</h2>
+ 	<p><input type="text" ng-model="count"></p>
+ 	<p>Count: {{ count }}</p>
+ 	<p>Fixed Count: {{ ::count }}</p>
+ </div>
+ <hr>
+ <div class="container" ng-controller="anotherCtrl as ac">
+ 	<h1>Controller without $scope.</h1>
+ 	<p>Message: {{ ac.msg }}</p>
+ </div>
+</body>
+</html>

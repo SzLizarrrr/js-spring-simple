@@ -1,0 +1,27 @@
+<h4>Attribute Directive</h4>
+<p [ngStyle]="{'font-size': '20pt', color: myColor}">ngSytle 1</p>
+<p [ngStyle]="myStyle">ngStyle 2</p>
+<p [ngClass]="'my-class'">ngClass 1</p>
+<p ngClass="my-class">ngClass 2</p>
+<p [ngClass]="myClass">ngClass 3</p>
+<p [ngClass]="['class1', 'class2']">ngClass 4</p>
+<p [ngClass]="{myClass: true, anotherClass: false}"></p>
+
+<h4>Structural Directive</h4>
+<!-- *ngIf -->
+<!-- *ngFor -->
+
+<ul>
+  <app-listitem *ngFor="let p of people; let  i = index;"
+    [person]="p" [index]="i"></app-listitem>
+</ul>
+
+<div [ngSwitch]="mySwitch">
+  <p *ngSwitchDefault>Switch to Default</p>
+  <p *ngSwitchCase="1">Switch to 1</p>
+  <p *ngSwitchCase="2">Switch to 2</p>
+  <p *ngSwitchCase="3">Switch to 3</p>
+</div>
+<button class="btn btn-primary" (click)="switch(1)">1</button>
+<button class="btn btn-primary" (click)="switch(2)">2</button>
+<button class="btn btn-primary" (click)="switch(3)">3</button>

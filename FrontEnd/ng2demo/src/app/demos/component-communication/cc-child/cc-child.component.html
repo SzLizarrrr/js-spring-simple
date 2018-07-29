@@ -1,0 +1,8 @@
+<div style="border: 1px solid red; margin: 10px;">
+  <h3>In Child</h3>
+  <ng-content select=".c2"></ng-content>
+  <p>{{ childPerson.name}} : {{ childPerson.age }}</p>
+  <p>Child Age: {{ childAge }}</p>
+  <button class="btn btn-primary" (click)="addAge()">Add Age</button>
+  <ng-content select=".c1"></ng-content>
+</div>

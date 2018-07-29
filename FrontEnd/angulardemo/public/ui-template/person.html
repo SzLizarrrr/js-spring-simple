@@ -1,0 +1,9 @@
+<h2>Person Page for ui-router</h2>
+<ul class="list-inline">
+    <li ng-repeat="p in persons" class="list-group-item-success">
+        <a ui-sref=".detail({name: '{{p.name}}'})" class="btn-link">
+            {{p.name}}
+        </a>
+    </li>
+</ul>
+<div ui-view></div>

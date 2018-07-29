@@ -1,0 +1,41 @@
+<div class="container">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">ng2demo</a>
+      </div>
+      <ul class="nav navbar-nav" *ngIf="this.authService.loggedIn | async">
+        <li>
+          <a routerLink="/lc" routerLinkActive="active">Life Cycle</a>
+        </li>
+        <li>
+          <a routerLink="/cd" routerLinkActive="active">Change Detection</a>
+        </li>
+        <li>
+          <a routerLink="/ve" routerLinkActive="active">View Encapsulation</a>
+        </li>
+        <li>
+          <a routerLink="/f" routerLinkActive="active">Form</a>
+        </li>
+        <li>
+          <a routerLink="/d" routerLinkActive="active">Directive</a>
+        </li>
+        <li>
+          <a routerLink="/p" routerLinkActive="active">Pipe</a>
+        </li>
+        <li>
+          <a routerLink="/cc" routerLinkActive="active">Component Communication</a>
+        </li>
+        <li>
+          <a routerLink="/o" routerLinkActive="active">Observable</a>
+        </li>
+        <li>
+          <a routerLink="/logout" routerLinkActive="active">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="row">
+    <router-outlet></router-outlet>
+  </div>
+</div>

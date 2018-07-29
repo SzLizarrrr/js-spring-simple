@@ -1,0 +1,29 @@
+package com.mercury.code;
+
+public class Employee implements Cloneable {
+	
+	String name;
+
+	public Employee() {
+		super();
+	}
+
+	public Employee(String name) {
+		super();
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public Employee clone() throws CloneNotSupportedException {
+		return (Employee)super.clone();
+	}
+
+}

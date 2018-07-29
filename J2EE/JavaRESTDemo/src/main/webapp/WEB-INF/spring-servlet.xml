@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/tx 
+  		http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+  		http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/template/**" location="/template/" />
+	<mvc:resources mapping="/lib/**" location="/lib/" />
+	
+	<mvc:default-servlet-handler />
+	
+	<context:component-scan base-package="com.mercury" />
+	<mvc:annotation-driven />
+	<tx:annotation-driven />
+
+	<!-- Define DataSource -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>oracle.jdbc.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@localhost:1521:XE
+			</value>
+		</property>
+		<!-- <property name="url"> <value>jdbc:oracle:thin:@ec2-34-203-234-254.compute-1.amazonaws.com:49161:XE 
+			</value> </property> -->
+		<property name="username" value="rshi" />
+		<property name="password" value="mercury" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.mercury.beans" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="mySessionFactory" parent="sessionFactory">
+		<property name="packagesToScan" value="com.mercury.beans" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="mySessionFactory"></property>
+	</bean>
+
+	<!-- Rest authentication entry point configuration -->
+	<sec:http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint"
+		authentication-manager-ref="authenticationManagerForRest">
+		<sec:intercept-url pattern="/api/**" />
+		<sec:intercept-url pattern="/account/**" />
+		<sec:form-login authentication-success-handler-ref="mySuccessHandler"
+			authentication-failure-handler-ref="myFailureHandler"
+			login-processing-url="/auth/login"
+			username-parameter="username"
+			password-parameter="password" />
+		<sec:access-denied-handler ref="myAuthenticationAccessDeniedHandler" />
+		<sec:http-basic />
+		<sec:logout logout-url="/auth/logout" success-handler-ref="restLogoutSuccessHandler" delete-cookies="JSESSIONID" />
+	</sec:http>
+
+	<!-- Entry point for REST service. -->
+	<bean id="restAuthenticationEntryPoint" class="com.mercury.security.RestAuthenticationEntryPoint" />
+
+	<!-- Custom User details service which is provide the user data -->
+	<bean id="customUserDetailsService" class="com.mercury.security.CustomUserDetailsService" />
+
+	<!-- Connect the custom authentication success handler -->
+	<bean id="mySuccessHandler" class="com.mercury.security.RestAuthenticationSuccessHandler" />
+	<!-- Using default failure handler -->
+	<bean id="myFailureHandler" class="com.mercury.security.RestAuthenticationFailureHandler" />
+
+	<!-- Using Authentication Access Denied handler -->
+	<bean id="myAuthenticationAccessDeniedHandler"
+		class="com.mercury.security.RestAuthenticationAccessDeniedHandler" />
+	
+	<bean id="restLogoutSuccessHandler"
+		class="com.mercury.security.RestLogoutSuccessHandler" />
+
+	<!-- Authentication manager -->
+	<sec:authentication-manager alias="authenticationManagerForRest">
+		<sec:authentication-provider
+			user-service-ref="customUserDetailsService">
+			<sec:password-encoder ref="passwordEncoder" />
+		</sec:authentication-provider>
+	</sec:authentication-manager>
+	
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg value="11"/>
+    </bean>
+
+	<!-- Enable the annotations for defining the secure role -->
+	<sec:global-method-security
+		secured-annotations="enabled" />
+
+</beans>

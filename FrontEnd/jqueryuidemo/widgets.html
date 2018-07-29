@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JQuery Widgets Demo</title>
+	<link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+</head>
+<body>
+<h2>Dialog</h2>
+<div id="dialog" title="Hey">
+	<p>You got this!</p>
+</div>
+<button id="clickMeBtn">Click me!</button>
+
+<h2>Progress bar</h2>
+<div id="progressbar"></div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#dialog").dialog({
+		});
+		$("#clickMeBtn").click(function() {
+			$("#dialog").dialog('open');
+		});
+		$("#progressbar").progressbar();
+		var val = 0;
+		var ct = setInterval(function() {
+			$("#progressbar").progressbar("value", val);
+			if(val <= 100) {
+				val += 5;
+			}else{
+				//clearInterval(ct);
+				val = 0;
+			}
+		}, 500);
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo10</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/angular-route.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", ["ngRoute"]);
+		app.controller("mainCtrl", ["$scope", function($scope) {
+			$scope.person = {
+				name: "Alice"
+			};
+			$scope.count = 100;
+		}]);
+
+		app.config(["$routeProvider", function($routeProvider) {
+			$routeProvider.when("/", {
+				templateUrl: "template/home.html",
+				controller: "homeCtrl"
+			}).when("/menu1", {
+				templateUrl: "template/menu1.html",
+				controller: "menu1Ctrl"
+			})
+			.when("/menu2/:word", {
+				templateUrl: "template/menu2.html",
+				controller: "menu2Ctrl"
+			}).otherwise({
+				redirectTo: "/"
+			});
+		}]);
+
+		app.value("sharedData", {
+			message: "This is a shared data"
+		});
+
+		app.controller("homeCtrl", ["$scope", "sharedData", function($scope, sharedData) {
+			$scope.data = sharedData;
+		}]);
+		app.controller("menu1Ctrl", ["$scope", "sharedData", function($scope, sharedData) {
+			$scope.data = sharedData;
+		}]);
+		app.controller("menu2Ctrl", ["$scope", "$routeParams", function($scope, $routeParams) {
+			$scope.word = $routeParams.word;
+		}]);
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Angular Routing</h1>
+	<hr>
+	<p>Person name: {{ person.name }}</p>
+	<p>Count: {{ count }}</p>
+
+	<div>
+		<ul class="list-inline">
+			<li><a href="#home">Home</a></li>
+			<li><a href="#menu1">Menu1</a></li>
+			<li><a href="#menu2/Table">Menu2</a></li>
+		</ul>
+		<div ng-view></div>
+	</div>
+</div>
+</body>
+</html>

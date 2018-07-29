@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo11</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/angular-route.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []);
+		app.controller("mainCtrl", ["$scope", function($scope) {
+
+		}]);
+		app.directive("ageValidator", function() {
+			return {
+				require: "ngModel",
+				link: function(scope, elem, attr, ctrl) {
+					ctrl.$validators.ageValidator = function(modelValue, viewValue) {
+						if(modelValue < 200 && modelValue >= 0) {
+							return true;
+						}
+						return false;
+					}
+				}
+			};
+		});
+	</script>
+	<style>
+		/* 
+			ng-valid: the model is valid
+            ng-invalid: the model is invalid
+            ng-valid-[key]: for each valid key added by $setValidity
+            ng-invalid-[key]: for each invalid key added by $setValidity
+            ng-pristine: the control hasn't been interacted with yet
+            ng-dirty: the control has been interacted with
+            ng-touched: the control has been blurred
+            ng-untouched: the control hasn't been blurred
+            ng-pending: any $asyncValidators are unfulfilled
+		*/
+		input#name.ng-dirty {
+			background-color: lightgrey;
+		}
+	</style>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h2>Angular Form(Validation)</h2>
+	<hr>
+	<form novalidate class="form-group" name="userForm"><!-- instance of FormController -->
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" ng-model="name" id="name" class="form-control" required>
+        </div>
+        <div ng-show="userForm.$submitted || userForm.name.$touched">
+        	<div ng-show="userForm.name.$error.required">
+        		<span style="color: red;">Name can't be empty!</span>
+        	</div>
+        </div>
+        <div class="form-group">
+            <label for="age">Age: </label>
+            <input type="number" name="age" ng-model="age" ng-model-options="{ debounce: 2000 }" class="form-control" id="age" age-validator>
+        </div>
+        <div ng-show="userForm.$submitted || userForm.age.$touched">
+        	<div ng-show="userForm.age.$error.ageValidator">
+        		<span style="color: red;">Age should be within [0, 200)</span>
+        	</div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" id="submit" type="submit">Submit</button>
+        </div>
+    </form>
+    <h3>Test</h3>
+    <p>Your Age: {{age}}</p>
+</div>
+</body>
+</html>

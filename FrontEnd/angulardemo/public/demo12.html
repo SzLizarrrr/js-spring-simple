@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo 12</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="app/service/person.js"></script>
+    <script type="text/javascript" src="app/demo12.js"></script>
+</head>
+<body ng-app="mainApp">
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" ui-sref="home" ui-sref-active="active">Home</a>
+                <a class="navbar-brand" ui-sref="person" ui-sref-active="active">Person</a>
+            </div>
+        </div>
+    </nav>
+
+    <div ui-view class="container">Hello World!</div>
+</body>
+</html>

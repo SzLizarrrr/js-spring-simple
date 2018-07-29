@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<context:component-scan base-package="com.mercury.stereotype.beans"></context:component-scan>
+	
+	<util:set id="emails">
+		<value>bob@gmail.com</value>
+		<value>bob@icloud.com</value>
+	</util:set>
+	
+	<bean id="lazyBean" class="com.mercury.stereotype.beans.LazyBean" lazy-init="true" />
+
+</beans>

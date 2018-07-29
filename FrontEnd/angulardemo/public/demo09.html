@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Demo09</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript">
+		var app = angular.module("mainApp", []);
+		app.controller("mainCtrl", ["$scope", "$injector", function($scope, $injector) {
+			$injector.invoke(["person", "myService", "myFactory", "myProvider", function(person, myService, myFactory, myProvider) {
+				$scope.person = person;
+				$scope.service = myService;
+				$scope.factory = myFactory;
+				$scope.provider = myProvider;
+				console.log($scope.factory.count);
+			}]);
+			$scope.count = 100; // undefined -> 100
+			$scope.$watch("count", function(newVal) {
+				$scope.factory.setCount(newVal);
+			});
+			$scope.increase = function() {
+				$scope.factory.increase();
+				$scope.count = $scope.factory.getCount();
+			};
+			$scope.getAllPersons = function() {
+				$injector.invoke(["ps", function(ps) {
+					ps.then(function(data) {
+						$scope.personList = data;
+					});
+				}]);
+			};
+		}]);
+		// singleton object.
+		app.value("person", {
+			name: "Alice",
+			sayHello: function() {
+				return "Hello " + this.name;
+			}
+		});	
+		app.service("myService", function() { // new myService()
+			this.message = "This is my service";
+			this.getCount = function() {
+				return 100;
+			};
+		});
+		// myFactory.count
+		app.factory("myFactory", function() { // myFactory()
+			var count = 1; //private
+			return {
+				name: "This is a factory",
+				getCount: function() {
+					return count;
+				},
+				setCount: function(c) {
+					count = c;
+				},
+				increase: function() {
+					count++;
+				}
+			};
+		});
+
+		var personService = function($q, $http) {
+			var defer = $q.defer();
+			$http.get("/persons").then(function(res) {
+				defer.resolve(res.data);
+			});
+			return defer.promise;
+		};
+		app.factory("ps", ["$q", "$http", personService]);
+
+		app.provider("myProvider", function() {
+			this.prefix = "Mr.";
+			this.$get = function() {
+				var that = this;
+				return {
+					name: "My Provider",
+					getName: function() {
+						return that.prefix + " " + this.name;
+					}
+				};
+			}
+		});
+
+		// service name + "Provider"
+		app.config(["myProviderProvider", function(myProviderProvider) {
+			myProviderProvider.prefix = "Miss.";
+		}]);
+	</script>
+</head>
+<body ng-app="mainApp">
+<div class="container" ng-controller="mainCtrl">
+	<h1>Angular Custom Services</h1>
+	<hr>
+	<h2>Use value to create a service</h2>
+	<p>Person Name: {{ person.name }}</p>
+	<p>Welcome message: {{ person.sayHello() }}</p>
+
+	<h2>Use service to create a service</h2>
+	<p>Service Message: {{ service.message }}</p>
+	<p>Count: {{ service.getCount() }}</p>
+
+	<h2>Use factory to create a service</h2>
+	<p>Factory name: {{ factory.name }}</p>
+	<p>Count: <input type="number" ng-model="count"></p>
+	<p>Current Count: {{ count }}</p>
+	<p>Factory Count: {{ factory.getCount() }}</p>
+	<button class="btn btn-primary" ng-click="increase()">Increase</button>
+
+	<h2>Use data service to return a deferred object as factory</h2>
+	<ul>
+		<li ng-repeat="p in personList">
+			{{ p.name }} : {{ p.city }}, {{ p.country }}
+		</li>
+	</ul>
+	<button class="btn btn-primary" ng-click="getAllPersons()">Get All Persons</button>	
+
+	<h2>User provider to create a service</h2>
+	<p>Privder name: {{ provider.getName() }}</p>
+</div>
+</body>
+</html>

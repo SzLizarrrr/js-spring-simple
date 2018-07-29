@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JQuery UI Interactions Demo</title>
+	<link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css">
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+	<style>
+	.container {
+		position: relative;
+		width: 500px;
+		height: 500px;
+		background-color: lightcoral;
+	}
+	#draggable-div {
+		position: relative;
+		width: 100px;
+		height: 100px;
+		background-color: lightgoldenrodyellow;
+		z-index: 100;
+	}
+	#droppable-div {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		width: 300px;
+		height: 300px;
+		background-color: lightsalmon;
+	}
+	</style>
+</head>
+<body>
+<div class="container">
+	<div id="draggable-div">
+		<p>Resizable Draggable</p>
+	</div>
+	<div id="droppable-div">
+		<p>Droppable</p>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#draggable-div").draggable({
+			containment: '.container',
+			cursor: "crosshair",
+			revert: "invalid",
+			zIndex: 100
+		}).resizable({
+			handles: "n, e, s, w, se",
+			maxWidth: 300,
+			maxHeight: 300,
+			minWidth: 80,
+			minHeight: 50
+		});
+		$("#droppable-div").droppable();
+	});
+</script>
+</body>
+</html>

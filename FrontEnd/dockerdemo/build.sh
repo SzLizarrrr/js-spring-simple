@@ -1,0 +1,4 @@
+docker rm dockerdemo_backend_1
+docker rm dockerdemo_database_1
+docker rmi dockerdemo_backend
+docker-compose up
